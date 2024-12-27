@@ -55,7 +55,7 @@ bool Graphics::Initialize(HWND hwnd, int width, int height)
 
 void Graphics::Render()
 {
-    float clearColor[4] = {0.0f, 0.0f, 1.0f, 1.0f};
+    float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
     deviceContext->ClearRenderTargetView(renderTargetView, clearColor);
 
     // 여기에 점과 선을 그리는 코드가 들어갈 예정
