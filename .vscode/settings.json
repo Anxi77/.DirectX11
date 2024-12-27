@@ -1,0 +1,30 @@
+{
+  "cmake.generator": "Visual Studio 17 2022",
+  "cmake.buildDirectory": "${workspaceFolder}/build",
+  "cmake.installPrefix": "${workspaceFolder}/bin",
+  "cmake.configureSettings": {
+    "CMAKE_RUNTIME_OUTPUT_DIRECTORY": "${workspaceFolder}/bin"
+  },
+  "cmake.configureOnOpen": true,
+  "cmake.debugConfig": {
+    "stopAtEntry": false,
+    "cwd": "${workspaceFolder}"
+  },
+  "cmake.defaultVariants": {
+    "buildType": {
+      "default": "debug"
+    }
+  },
+  "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+  "files.encoding": "utf8",
+  "files.autoGuessEncoding": false,
+  "[cpp]": {
+    "files.encoding": "utf8"
+  },
+  "[markdown]": {
+    "files.encoding": "utf8"
+  },
+  "cmake.buildBeforeRun": true,
+  "cmake.configureOnEdit": true,
+  "cmake.automaticReconfigure": true
+}

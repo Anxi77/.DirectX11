@@ -1,0 +1,10 @@
+^D:\ANXI\DEV\GIT\DX11TEST\BUILD\CMAKEFILES\A8B3506369A34A2692F307D6ADE270A4\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SD:/ANXI/Dev/Git/DX11Test -BD:/ANXI/Dev/Git/DX11Test/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file D:/ANXI/Dev/Git/DX11Test/build/DX11Test.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
