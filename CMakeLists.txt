@@ -8,10 +8,18 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Add source files
 set(SOURCES
     src/main.cpp
+    src/Window.cpp
+    src/Graphics.cpp
+)
+
+# Add header files
+set(HEADERS
+    src/Window.h
+    src/Graphics.h
 )
 
 # Create executable
-add_executable(${PROJECT_NAME} ${SOURCES})
+add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 
 # Windows SDK settings
 if(MSVC)

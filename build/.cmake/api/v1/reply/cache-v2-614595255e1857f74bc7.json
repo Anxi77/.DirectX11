@@ -114,6 +114,18 @@
 			"value" : "C:/Program Files/CMake/bin/ctest.exe"
 		},
 		{
+			"name" : "CMAKE_CXX_COMPILER",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "No help, variable specified on the command line."
+				}
+			],
+			"type" : "FILEPATH",
+			"value" : "C:/MinGW/bin/g++.exe"
+		},
+		{
 			"name" : "CMAKE_CXX_FLAGS",
 			"properties" : 
 			[
@@ -208,6 +220,18 @@
 			],
 			"type" : "STRING",
 			"value" : "kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib"
+		},
+		{
+			"name" : "CMAKE_C_COMPILER",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "No help, variable specified on the command line."
+				}
+			],
+			"type" : "FILEPATH",
+			"value" : "C:/MinGW/bin/gcc.exe"
 		},
 		{
 			"name" : "CMAKE_C_FLAGS",

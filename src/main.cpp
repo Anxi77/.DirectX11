@@ -1,67 +1,25 @@
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <d3d11.h>
-#include <iostream>
-
-// Window Procedure
-LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
-{
-    switch (msg)
-    {
-    case WM_CLOSE:
-        DestroyWindow(hwnd);
-        return 0;
-    case WM_DESTROY:
-        PostQuitMessage(0);
-        return 0;
-    }
-    return DefWindowProc(hwnd, msg, wParam, lParam);
-}
+#include "Window.h"
+#include "Graphics.h"
 
 int main()
 {
-    // Register window class
-    WNDCLASSEXW wc = {};
-    wc.cbSize = sizeof(WNDCLASSEXW);
-    wc.lpfnWndProc = WndProc;
-    wc.hInstance = GetModuleHandle(nullptr);
-    wc.lpszClassName = L"DX11WindowClass";
-
-    if (!RegisterClassExW(&wc))
+    Window window;
+    if (!window.Initialize(L"DirectX11 Window", 800, 600))
     {
-        std::cout << "Window registration failed\n";
+        std::cout << "Window initialization failed\n";
         return -1;
     }
 
-    // Create window
-    HWND hwnd = CreateWindowExW(
-        0,                            // Optional window styles
-        L"DX11WindowClass",           // Window class
-        L"DirectX11 Window",          // Window text
-        WS_OVERLAPPEDWINDOW,          // Window style
-        CW_USEDEFAULT, CW_USEDEFAULT, // Position
-        800, 600,                     // Size
-        nullptr,                      // Parent window
-        nullptr,                      // Menu
-        GetModuleHandle(nullptr),     // Instance handle
-        nullptr                       // Additional data
-    );
-
-    if (!hwnd)
+    Graphics graphics;
+    if (!graphics.Initialize(window.GetHandle(), 800, 600))
     {
-        std::cout << "Window creation failed\n";
+        std::cout << "Graphics initialization failed\n";
         return -1;
     }
 
-    // Show window
-    ShowWindow(hwnd, SW_SHOW);
-
-    // Message loop
-    MSG msg = {};
-    while (GetMessage(&msg, nullptr, 0, 0))
+    while (window.ProcessMessages())
     {
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
+        graphics.Render();
     }
 
     return 0;
