@@ -6,10 +6,6 @@
     "CMAKE_RUNTIME_OUTPUT_DIRECTORY": "${workspaceFolder}/bin"
   },
   "cmake.configureOnOpen": true,
-  "cmake.debugConfig": {
-    "stopAtEntry": false,
-    "cwd": "${workspaceFolder}"
-  },
   "cmake.defaultVariants": {
     "buildType": {
       "default": "debug"
@@ -18,13 +14,34 @@
   "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
   "files.encoding": "utf8",
   "files.autoGuessEncoding": false,
-  "[cpp]": {
-    "files.encoding": "utf8"
-  },
-  "[markdown]": {
-    "files.encoding": "utf8"
-  },
   "cmake.buildBeforeRun": true,
   "cmake.configureOnEdit": true,
-  "cmake.automaticReconfigure": true
+  "cmake.automaticReconfigure": true,
+  "files.associations": {
+    "*.hlsl": "hlsl",
+    "*.hlsli": "hlsl"
+  },
+  "C_Cpp.intelliSenseEngine": "default",
+  "C_Cpp.default.includePath": [
+    "${workspaceFolder}/**",
+    "C:/Program Files (x86)/Windows Kits/10/Include/10.0.19041.0/um",
+    "C:/Program Files (x86)/Windows Kits/10/Include/10.0.19041.0/shared"
+  ],
+  "hlsl.dxcPath": "${workspaceFolder}/tools/dxc.exe",
+  "hlsl.enableValidation": true,
+  "hlsl.suggestionSupport": true,
+  "terminal.integrated.defaultProfile.windows": "Command Prompt",
+  "terminal.integrated.profiles.windows": {
+    "Command Prompt": {
+      "path": "cmd.exe",
+      "args": ["/k", "chcp 437 && set VSLANG=1033"]
+    }
+  },
+  "cmake.loggingLevel": "debug",
+  "terminal.integrated.env.windows": {
+    "VSLANG": "1033"
+  },
+  "cmake.debugConfig": {
+    "console": "externalTerminal"
+  }
 }

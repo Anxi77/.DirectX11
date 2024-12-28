@@ -35,6 +35,9 @@ Win32/
 *.cso
 *.pso
 *.vso
+*.pdb
+*.asm
+bin/shaders/
 
 # Windows specific
 [Tt]humbs.db
