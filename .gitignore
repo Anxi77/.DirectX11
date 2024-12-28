@@ -1,0 +1,58 @@
+# Build directories
+build/
+out/
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+
+# Visual Studio files
+.vs/
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+*.sdf
+*.opensdf
+*.db
+*.opendb
+*.VC.db
+*.VC.VC.opendb
+
+# CMake files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+*.dir/
+Win32/
+*.vcxproj
+*.vcxproj.filters
+*.sln
+
+# Compiled Shader files
+*.cso
+*.pso
+*.vso
+
+# Windows specific
+[Tt]humbs.db
+*.exe
+*.ilk
+*.pdb
+*.lib
+*.exp
+*.dll
+
+# DirectX debug files
+*.pix
+
+# Log files
+*.log
+*.tlog
+
+# Temporary files
+*.tmp
+*.temp
+~$* 

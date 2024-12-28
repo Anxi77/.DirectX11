@@ -1,3 +1,0 @@
-D:/ANXI/Dev/Git/DX11Test/build/CMakeFiles/DX11Test.dir
-D:/ANXI/Dev/Git/DX11Test/build/CMakeFiles/ALL_BUILD.dir
-D:/ANXI/Dev/Git/DX11Test/build/CMakeFiles/ZERO_CHECK.dir
