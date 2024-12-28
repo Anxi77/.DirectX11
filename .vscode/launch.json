@@ -3,7 +3,7 @@
     "configurations": [
         {
             "name": "C++ Launch",
-            "type": "cppdbg",
+            "type": "cppvsdbg",
             "request": "launch",
             "program": "${command:cmake.launchTargetPath}",
             "args": [],
@@ -12,15 +12,7 @@
             "environment": [
             ],
             "externalConsole": true,
-            "MIMode": "gdb",
-            "miDebuggerPath": "gdb",
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ]
+            "visualizerFile": "${workspaceFolder}/my.natvis"
         }
     ]
 } 

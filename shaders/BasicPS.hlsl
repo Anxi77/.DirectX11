@@ -6,7 +6,7 @@ struct PSInput
     float4 color : COLOR;
 };
 
-float4 main(PSInput input) : SV_TARGET
+float4 main() : SV_TARGET
 {
-    return saturate(input.color);
+    return float4(1.0f, 0.0f, 0.0f, 1.0f);  // 빨간색 출력
 } 

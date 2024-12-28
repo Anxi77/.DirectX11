@@ -1,21 +1,6 @@
 #pragma pack_matrix(row_major)
 
-struct VSInput
+float4 main(float3 pos : POSITION) : SV_POSITION
 {
-    float3 position : POSITION;
-    float4 color : COLOR;
-};
-
-struct VSOutput
-{
-    float4 position : SV_POSITION;
-    float4 color : COLOR;
-};
-
-VSOutput main(VSInput input)
-{
-    VSOutput output;
-    output.position = float4(input.position.x, input.position.y, input.position.z, 1.0f);
-    output.color = input.color;
-    return output;
+    return float4(pos, 1.0f);  // 입력된 위치를 그대로 출력
 } 

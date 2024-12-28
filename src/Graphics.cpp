@@ -1,5 +1,25 @@
 #include "Graphics.h"
 
+// device는 그래픽 디바이스를 가리키는 포인터
+// -> 연산자를 사용하여 포인터를 통해 CreateBuffer 함수에 접근
+/*
+    device->CreateBuffer(
+    &bufferDesc,    // 버퍼의 속성을 정의하는 구조체의 주소 (크기, 사용법, 바인딩 방법 등)
+    &initData,      // 버퍼의 초기 데이터를 포함하는 구조체의 주소
+    &vertexBuffer   // 생성된 버퍼 객체를 저장할 포인터 변수의 주소
+    );
+*/
+
+/*
+ * 위 코드는 다음과 동일:
+ * (*device).CreateBuffer(&bufferDesc, &initData, &vertexBuffer);
+ *
+ * CreateBuffer 함수는 일반적으로:
+ * 1. 버퍼를 생성하고
+ * 2. 초기 데이터로 채우고
+ * 3. 생성된 버퍼의 포인터를 vertexBuffer에 저장합니다
+ */
+
 Graphics::Graphics() : device(nullptr),
                        deviceContext(nullptr),
                        swapChain(nullptr),
@@ -71,7 +91,6 @@ bool Graphics::LoadShaders()
     GetCurrentDirectoryW(MAX_PATH, currentDir);
     std::wcout << L"Current directory: " << currentDir << std::endl;
 
-    // 디버깅을 위한 파일 존재 여부 확인
     WIN32_FIND_DATAW findData;
     HANDLE hFind = FindFirstFileW((shaderPath + L"*.cso").c_str(), &findData);
     if (hFind != INVALID_HANDLE_VALUE)
@@ -130,12 +149,11 @@ bool Graphics::LoadShaders()
         sprintf_s(errorMsg, "Failed to create vertex shader! Error: 0x%08X\n", hr);
         std::cout << errorMsg;
         std::cout << "Shader size: " << vsData.size() << " bytes\n";
-        
+
         // 입력 레이아웃 정의
         D3D11_INPUT_ELEMENT_DESC layout[] = {
-            { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-        };
+            {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+            {"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0}};
 
         // 입력 레이아웃 생성 시도
         hr = device->CreateInputLayout(
@@ -143,33 +161,32 @@ bool Graphics::LoadShaders()
             2,
             vsData.data(),
             vsData.size(),
-            &inputLayout
-        );
+            &inputLayout);
 
         if (FAILED(hr))
         {
-            std::cout << "Failed to create input layout! Error: 0x%08X\n" << hr << std::endl;
+            std::cout << "Failed to create input layout! Error: 0x%08X\n"
+                      << hr << std::endl;
         }
         return false;
     }
 
     // 입력 레이아웃 정의 및 생성을 셰이더 생성 성공 후로 이동
     D3D11_INPUT_ELEMENT_DESC layout[] = {
-        { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-        { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-    };
+        {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0}};
 
     hr = device->CreateInputLayout(
         layout,
         2,
         vsData.data(),
         vsData.size(),
-        &inputLayout
-    );
+        &inputLayout);
 
     if (FAILED(hr))
     {
-        std::cout << "Failed to create input layout! Error: 0x%08X\n" << hr << std::endl;
+        std::cout << "Failed to create input layout! Error: 0x%08X\n"
+                  << hr << std::endl;
         return false;
     }
 
@@ -192,7 +209,35 @@ void Graphics::Render()
     float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
     deviceContext->ClearRenderTargetView(renderTargetView, clearColor);
 
-    // 여기에 점과 선을 그리는 코드가 들어갈 예정
+    // 점의 위치 데이터
+    float point[] = {0.0f, 0.0f, 0.0f}; // 화면 중앙
+
+    // 버텍스 버퍼 생성
+    D3D11_BUFFER_DESC bufferDesc = {};
+    bufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    bufferDesc.ByteWidth = sizeof(point);
+    bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+
+    D3D11_SUBRESOURCE_DATA initData = {};
+    initData.pSysMem = point;
+
+    ID3D11Buffer *vertexBuffer;
+    device->CreateBuffer(&bufferDesc, &initData, &vertexBuffer);
+
+    // 버텍스 버퍼 설정
+    UINT stride = sizeof(float) * 3;
+    UINT offset = 0;
+    deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+    deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+
+    // 셰이더 설정
+    deviceContext->VSSetShader(vertexShader, nullptr, 0);
+    deviceContext->PSSetShader(pixelShader, nullptr, 0);
+
+    // 점 그리기
+    deviceContext->Draw(1, 0);
+
+    vertexBuffer->Release();
 
     swapChain->Present(1, 0);
 }
