@@ -41,12 +41,6 @@ bin/shaders/
 
 # Windows specific
 [Tt]humbs.db
-*.exe
-*.ilk
-*.pdb
-*.lib
-*.exp
-*.dll
 
 # DirectX debug files
 *.pix
