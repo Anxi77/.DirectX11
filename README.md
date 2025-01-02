@@ -20,6 +20,8 @@ A basic graphics engine project using DirectX 11.
 
 • `src/main.cpp`: Program entry point
 
+━━━━━━━━━━━━━━━━━━━━━━
+
 ## 📚 Learning Roadmap
 
 <details>
