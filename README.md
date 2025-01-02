@@ -12,6 +12,7 @@ A basic graphics engine project using DirectX 11.
   <img src="https://img.shields.io/badge/DirectX_Graphics-ED1C24?style=for-the-badge&logo=microsoft&logoColor=white"/>
   <img src="https://img.shields.io/badge/Core_Systems-4B32C3?style=for-the-badge&logo=c%2B%2B&logoColor=white"/>
 </p>
+━━━━━━━━━━━━━━━━━━━━━━
 
 • `src/Window.h`, `src/Window.cpp`: Window creation and management
 
