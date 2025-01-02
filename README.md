@@ -14,7 +14,9 @@ A basic graphics engine project using DirectX 11.
 </p>
 
 • `src/Window.h`, `src/Window.cpp`: Window creation and management
+
 • `src/Graphics.h`, `src/Graphics.cpp`: DirectX graphics initialization and rendering
+
 • `src/main.cpp`: Program entry point
 
 ## 📚 Learning Roadmap
