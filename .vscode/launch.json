@@ -1,18 +1,17 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": "C++ Launch",
-            "type": "cppvsdbg",
-            "request": "launch",
-            "program": "${command:cmake.launchTargetPath}",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}/bin",
-            "environment": [
-            ],
-            "externalConsole": true,
-            "visualizerFile": "${workspaceFolder}/my.natvis"
-        }
-    ]
-} 
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "DirectX11 Launch",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${command:cmake.launchTargetPath}",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/bin",
+      "environment": [],
+      "externalConsole": true,
+      "setupCommands": []
+    }
+  ]
+}

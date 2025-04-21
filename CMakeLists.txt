@@ -1,20 +1,28 @@
 cmake_minimum_required(VERSION 3.20)
-project(DX11Test)
 
-# Force UTF-8 for all files
+project(DirectX11_Render)
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 if(MSVC)
-    add_compile_options(/utf-8 /validate-charset)
+    add_compile_options(
+        /utf-8
+        /EHsc
+        /MP
+        $<$<CONFIG:DEBUG>:/Od>
+        $<$<CONFIG:RELEASE>:/O2>
+    )
 endif()
 
 # Use C++17 standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# 셰이더 컴파일 설정
+# Shader Compile Settings
 set(SHADER_SOURCE_DIR "${CMAKE_SOURCE_DIR}/shaders")
 set(SHADER_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/bin/shaders")
 
-# 셰이더 컴파일 함수
+# Shader Compile Function
 function(compile_shader SHADER_FILE SHADER_TYPE)
     # Check if DXC compiler exists
     set(DXC_PATH "${CMAKE_SOURCE_DIR}/tools/dxc.exe")
@@ -35,14 +43,14 @@ function(compile_shader SHADER_FILE SHADER_TYPE)
     set(SHADER_PDB "${SHADER_OUTPUT_DIR}/${SHADER_NAME}.pdb")
     set(SHADER_ASM "${SHADER_OUTPUT_DIR}/${SHADER_NAME}.asm")
 
-    # 셰이더 출력 디렉토리 생성
+    # Make Shader Output Directory
     file(MAKE_DIRECTORY ${SHADER_OUTPUT_DIR})
 
-    # 디버그 메시지 출력
+    # Print Debug Message
     message(STATUS "Compiling shader: ${SHADER_INPUT}")
     message(STATUS "Output to: ${SHADER_OUTPUT}")
 
-    # 셰이더 컴파일 명령 추가
+    # Add Shader Compile Command
     add_custom_command(
         OUTPUT ${SHADER_OUTPUT}
         COMMAND fxc.exe /T ${SHADER_TYPE}_5_0 /E main 
@@ -52,47 +60,44 @@ function(compile_shader SHADER_FILE SHADER_TYPE)
         COMMENT "Compiling ${SHADER_TYPE} shader: ${SHADER_FILE}"
     )
 
-    # 전역 속성에 출력 파일 추가
+    # Add Shader Output to Global Property
     set_property(GLOBAL APPEND PROPERTY SHADER_OUTPUTS ${SHADER_OUTPUT})
 endfunction()
 
-# 셰이더 파일 목록
-set(SHADER_FILES
-    BasicVS.hlsl
-    BasicPS.hlsl
+# Shader File List - Recursively find all shader files
+file(GLOB_RECURSE SHADER_FILES 
+    "${CMAKE_SOURCE_DIR}/shaders/*.hlsl"
 )
 
-# 셰이더 컴파일
+# Compile Shaders
 foreach(SHADER ${SHADER_FILES})
-    if(${SHADER} MATCHES "VS.hlsl$")
-        compile_shader(${SHADER} "vs")
-    elseif(${SHADER} MATCHES "PS.hlsl$")
-        compile_shader(${SHADER} "ps")
+    get_filename_component(SHADER_NAME ${SHADER} NAME)
+    if(${SHADER_NAME} MATCHES "VS.hlsl$")
+        compile_shader(${SHADER_NAME} "vs")
+    elseif(${SHADER_NAME} MATCHES "PS.hlsl$")
+        compile_shader(${SHADER_NAME} "ps")
     endif()
 endforeach()
 
-# 컴파일된 셰이더 파일들을 커스텀 타겟으로 추가
+# Add Compiled Shader Files to Custom Target
 get_property(SHADER_OUTPUTS GLOBAL PROPERTY SHADER_OUTPUTS)
 add_custom_target(Shaders ALL DEPENDS ${SHADER_OUTPUTS})
 
-# Add source files
-set(SOURCES
-    src/main.cpp
-    src/Window.cpp
-    src/Graphics.cpp
+# Source Files - Recursively find all source/header files
+file(GLOB_RECURSE SOURCES
+    "${CMAKE_SOURCE_DIR}/src/*.cpp"
 )
 
-# Add header files
-set(HEADERS
-    src/Window.h
-    src/Graphics.h
+file(GLOB_RECURSE HEADERS
+    "${CMAKE_SOURCE_DIR}/src/*.h"
+    "${CMAKE_SOURCE_DIR}/src/*.hpp"
 )
 
 # Create executable
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 add_dependencies(${PROJECT_NAME} Shaders)
 
-# Windows SDK settings
+# Windows SDK Settings
 if(MSVC)
     # Remove default UNICODE definitions from MSVC flags
     foreach(flag_var
@@ -112,12 +117,30 @@ if(MSVC)
         /DUNICODE
         /D_UNICODE
     )
+
+    target_include_directories(${PROJECT_NAME} PRIVATE
+        ${CMAKE_SOURCE_DIR}/src
+        "C:/Program Files (x86)/Windows Kits/10/Include/10.0.22621.0/um"
+        "C:/Program Files (x86)/Windows Kits/10/Include/10.0.22621.0/shared"
+        "C:/Program Files (x86)/Windows Kits/10/Include/10.0.22621.0/ucrt"
+        "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.38.33130/include"
+    )
     
     target_link_libraries(${PROJECT_NAME} PRIVATE
         d3d11
         dxgi
         ole32
         user32
+    )
+
+    # 컴파일러 옵션 설정
+    string(REPLACE "/W3" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+    add_compile_options(
+        /utf-8
+        /EHsc
+        /MP
+        $<$<CONFIG:DEBUG>:/Od>
+        $<$<CONFIG:RELEASE>:/O2>
     )
 endif() 
 

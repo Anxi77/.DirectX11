@@ -1,0 +1,60 @@
+name: Workflow Tracking
+
+on:
+  push:
+    branches:
+      - "**"
+    paths-ignore:
+      - "**.md"
+      - ".gitignore"
+      - "LICENSE"
+
+permissions:
+  issues: write
+  contents: write
+  pull-requests: write
+  repository-projects: write
+  actions: read
+  checks: write
+  statuses: write
+  id-token: write
+
+env:
+  TIMEZONE: "Asia/Seoul"
+  EXCLUDED_COMMITS: "^(chore|docs|style):"
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  PAT: ${{ secrets.PAT }}
+  PROJECT_NUMBER: "2"
+
+jobs:
+  track-workflow:
+    runs-on: ubuntu-latest
+    if: |
+      !contains(github.event.head_commit.message, '[automated]') &&
+      !contains(github.event.head_commit.message, '[skip ci]') &&
+      !contains(github.event.head_commit.message, '[no ci]')
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r .github/requirements.txt
+
+      - name: Track Workflow
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          cd .github/scripts
+          PYTHONPATH=. python workflow_tracker.py

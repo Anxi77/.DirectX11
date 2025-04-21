@@ -1,47 +1,49 @@
 {
-  "cmake.generator": "Visual Studio 17 2022",
+  "cmake.generator": "Ninja",
   "cmake.buildDirectory": "${workspaceFolder}/build",
-  "cmake.installPrefix": "${workspaceFolder}/bin",
   "cmake.configureSettings": {
-    "CMAKE_RUNTIME_OUTPUT_DIRECTORY": "${workspaceFolder}/bin"
+    "CMAKE_RUNTIME_OUTPUT_DIRECTORY": "${workspaceFolder}/bin",
+    "CMAKE_MAKE_PROGRAM": "C:/Program Files/Microsoft Visual Studio/2022/Community/Common7/IDE/CommonExtensions/Microsoft/CMake/Ninja/ninja.exe",
+    "CMAKE_C_COMPILER": "cl.exe",
+    "CMAKE_CXX_COMPILER": "cl.exe"
   },
-  "cmake.configureOnOpen": true,
-  "cmake.defaultVariants": {
-    "buildType": {
-      "default": "debug"
-    }
+  "cmake.configureEnvironment": {
+    "VSCMD_SKIP_SENDTELEMETRY": "1"
   },
-  "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+  "cmake.environment": {
+    "PATH": "${env:PATH};C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.38.33130/bin/Hostx64/x64"
+  },
   "files.encoding": "utf8",
-  "files.autoGuessEncoding": false,
-  "cmake.buildBeforeRun": true,
-  "cmake.configureOnEdit": true,
-  "cmake.automaticReconfigure": true,
-  "files.associations": {
-    "*.hlsl": "hlsl",
-    "*.hlsli": "hlsl"
-  },
-  "C_Cpp.intelliSenseEngine": "default",
-  "C_Cpp.default.includePath": [
-    "${workspaceFolder}/**",
-    "C:/Program Files (x86)/Windows Kits/10/Include/10.0.19041.0/um",
-    "C:/Program Files (x86)/Windows Kits/10/Include/10.0.19041.0/shared"
-  ],
-  "hlsl.dxcPath": "${workspaceFolder}/tools/dxc.exe",
-  "hlsl.enableValidation": true,
-  "hlsl.suggestionSupport": true,
-  "terminal.integrated.defaultProfile.windows": "Command Prompt",
   "terminal.integrated.profiles.windows": {
     "Command Prompt": {
       "path": "cmd.exe",
-      "args": ["/k", "chcp 437 && set VSLANG=1033"]
+      "args": ["/k", "chcp 65001"]
     }
   },
-  "cmake.loggingLevel": "debug",
-  "terminal.integrated.env.windows": {
-    "VSLANG": "1033"
+  "terminal.integrated.defaultProfile.windows": "Command Prompt",
+  "[cpp]": {
+    "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd",
+    "editor.formatOnSave": true,
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true
   },
-  "cmake.debugConfig": {
-    "console": "externalTerminal"
-  }
+  "C_Cpp.formatting": "vcFormat",
+  "C_Cpp.vcFormat.indent.caseContents": true,
+  "C_Cpp.vcFormat.indent.preprocessor": "none",
+  "C_Cpp.vcFormat.indent.namespaceContents": true,
+  "C_Cpp.vcFormat.space.beforeFunctionOpenParenthesis": "ignore",
+  "C_Cpp.vcFormat.newLine.beforeOpenBrace.function": "sameLine",
+  "C_Cpp.vcFormat.newLine.beforeOpenBrace.block": "sameLine",
+  "C_Cpp.default.compilerPath": "C:/MinGW/bin/g++.exe",
+  "C_Cpp.intelliSenseEngine": "disabled",
+  "clangd.arguments": [
+    "--background-index",
+    "--clang-tidy",
+    "--completion-style=detailed",
+    "--header-insertion=never",
+    "--query-driver=C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/Llvm/x64/bin/clang-cl.exe",
+    "--compile-commands-dir=${workspaceFolder}/build"
+  ],
+  "clangd.checkUpdates": true,
+  "clangd.onConfigChanged": "restart"
 }

@@ -1,0 +1,6 @@
+CompileFlags:
+  Add: [-Wno-unused-includes, -Wno-MissingIncludes]
+
+Diagnostics:
+  UnusedIncludes: None
+  MissingIncludes: None
