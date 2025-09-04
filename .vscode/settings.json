@@ -27,15 +27,6 @@
     "editor.tabSize": 4,
     "editor.insertSpaces": true
   },
-  "C_Cpp.formatting": "vcFormat",
-  "C_Cpp.vcFormat.indent.caseContents": true,
-  "C_Cpp.vcFormat.indent.preprocessor": "none",
-  "C_Cpp.vcFormat.indent.namespaceContents": true,
-  "C_Cpp.vcFormat.space.beforeFunctionOpenParenthesis": "ignore",
-  "C_Cpp.vcFormat.newLine.beforeOpenBrace.function": "sameLine",
-  "C_Cpp.vcFormat.newLine.beforeOpenBrace.block": "sameLine",
-  "C_Cpp.default.compilerPath": "C:/MinGW/bin/g++.exe",
-  "C_Cpp.intelliSenseEngine": "disabled",
   "clangd.arguments": [
     "--background-index",
     "--clang-tidy",
@@ -44,6 +35,14 @@
     "--query-driver=C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/Llvm/x64/bin/clang-cl.exe",
     "--compile-commands-dir=${workspaceFolder}/build"
   ],
+  "C_Cpp.formatting": "vcFormat",
+  "C_Cpp.vcFormat.indent.caseContents": true,
+  "C_Cpp.vcFormat.indent.preprocessor": "none",
+  "C_Cpp.vcFormat.indent.namespaceContents": true,
+  "C_Cpp.vcFormat.space.beforeFunctionOpenParenthesis": "ignore",
+  "C_Cpp.vcFormat.newLine.beforeOpenBrace.function": "sameLine",
+  "C_Cpp.vcFormat.newLine.beforeOpenBrace.block": "sameLine",
+  "C_Cpp.intelliSenseEngine": "disabled",
   "clangd.checkUpdates": true,
   "clangd.onConfigChanged": "restart"
 }

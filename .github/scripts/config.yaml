@@ -1,0 +1,201 @@
+# GitHub Automation Configuration
+# Centralized configuration with environment variable support
+# Use ${VAR:default_value} syntax for environment variable substitution
+
+# Global Settings
+global:
+  timezone: "${TZ:Asia/Seoul}"
+  project_number: ${PROJECT_NUMBER:2}
+  max_retries: ${MAX_RETRIES:3}
+  log_level: "${LOG_LEVEL:INFO}"
+
+# Daily Status Report Configuration
+daily_reporter:
+  enabled: ${DSR_ENABLED:true}
+  issue_prefix: "${DSR_PREFIX:📅}"
+  dsr_label: "${DSR_LABEL:DSR}"
+  branch_label_prefix: "branch:"
+  excluded_commit_types:
+    - "xx"
+  keep_dsr_days: ${DSR_KEEP_DAYS:7}
+
+# Project Synchronization Configuration
+project_sync:
+  enabled: ${PROJECT_SYNC_ENABLED:true}
+  status_field_name: "${STATUS_FIELD:Status}"
+  priority_field_name: "${PRIORITY_FIELD:Priority}"
+  category_field_name: "${CATEGORY_FIELD:Category}"
+
+  # Label mappings for task status
+  status_labels:
+    "todo": "TODO"
+    "in-progress": "IN_PROGRESS"
+    "in-review": "IN_REVIEW"
+    "done": "DONE"
+    "blocked": "BLOCKED"
+
+  # Label mappings for task priority
+  priority_labels:
+    "priority:low": "LOW"
+    "priority:medium": "MEDIUM"
+    "priority:high": "HIGH"
+    "priority:critical": "CRITICAL"
+
+  # Issues to exclude from project tracking
+  excluded_labels:
+    - "${EXCLUDE_DSR_LABEL:DSR}"
+    - "documentation"
+    - "duplicate"
+    - "invalid"
+
+  excluded_title_prefixes:
+    - ".github/workflows/"
+    - "[automated]"
+
+  category_label_prefix: "category:"
+
+# GitHub API Configuration
+github:
+  max_retries: ${GITHUB_MAX_RETRIES:3}
+  base_delay: ${GITHUB_BASE_DELAY:1.0}
+  rate_limit_buffer: ${GITHUB_RATE_LIMIT_BUFFER:100}
+
+# Commit Parser Configuration
+commit_parser:
+  enforce_format: ${ENFORCE_COMMIT_FORMAT:true}
+  allowed_types:
+    - "feat"
+    - "fix"
+    - "docs"
+    - "style"
+    - "refactor"
+    - "test"
+    - "chore"
+    - "design"
+    - "comment"
+    - "rename"
+    - "remove"
+    - "!BREAKING CHANGE"
+    - "!HOTFIX"
+
+# Note: Task proposal functionality moved to Actions/TaskProposal/ module
+# This automation system focuses on core commit tracking and project sync only
+
+# Workflow Trigger Configuration
+workflows:
+  # Workflow tracking triggers
+  tracking:
+    enabled: ${WORKFLOW_TRACKING_ENABLED:true}
+    excluded_patterns:
+      - "\\[automated\\]"
+      - "\\[skip ci\\]"
+      - "\\[no ci\\]"
+
+    # Branch filters
+    included_branches:
+      - "main"
+      - "master"
+      - "develop"
+      - "feature/**"
+      - "hotfix/**"
+
+    excluded_branches:
+      - "dependabot/**"
+      - "renovate/**"
+
+  # Task management triggers
+  task_management:
+    enabled: ${TASK_MANAGEMENT_ENABLED:true}
+    issue_events:
+      - "edited"
+      - "labeled"
+      - "unlabeled"
+      - "assigned"
+      - "unassigned"
+
+    project_events:
+      - "created"
+      - "moved"
+      - "converted"
+      - "deleted"
+
+    # Automation actor exclusions
+    excluded_actors:
+      - "github-actions[bot]"
+      - "dependabot[bot]"
+      - "renovate[bot]"
+
+# Logging Configuration
+logging:
+  level: "${LOG_LEVEL:INFO}"
+  format: "${LOG_FORMAT:%(asctime)s [%(levelname)s] %(name)s: %(message)s}"
+  date_format: "${LOG_DATE_FORMAT:%Y-%m-%d %H:%M:%S}"
+
+  # Component-specific log levels
+  loggers:
+    "github": "${GITHUB_LOG_LEVEL:WARNING}"
+    "urllib3": "WARNING"
+    "requests": "WARNING"
+
+# Error Handling Configuration
+error_handling:
+  max_errors_per_run: ${MAX_ERRORS_PER_RUN:10}
+  retry_failed_operations: ${RETRY_FAILED_OPS:true}
+  notification_on_critical_error: ${NOTIFY_ON_CRITICAL:false}
+
+# Performance Configuration
+performance:
+  batch_size: ${BATCH_SIZE:50}
+  concurrent_requests: ${CONCURRENT_REQUESTS:5}
+  cache_duration: ${CACHE_DURATION:300}
+
+# Security Configuration
+security:
+  validate_commit_signatures: ${VALIDATE_SIGNATURES:false}
+  require_signed_commits: ${REQUIRE_SIGNED_COMMITS:false}
+  sensitive_data_patterns:
+    - "password"
+    - "secret"
+    - "api_key"
+    - "token"
+    - "private_key"
+
+# Environment-specific overrides
+environments:
+  development:
+    global:
+      log_level: "DEBUG"
+      max_retries: 1
+    project_sync:
+      enabled: ${DEV_PROJECT_SYNC:true}
+    error_handling:
+      notification_on_critical_error: false
+
+  staging:
+    global:
+      log_level: "INFO"
+      max_retries: 2
+
+  production:
+    global:
+      log_level: "${PROD_LOG_LEVEL:WARNING}"
+      max_retries: 3
+    error_handling:
+      notification_on_critical_error: ${PROD_NOTIFY_CRITICAL:true}
+    security:
+      validate_commit_signatures: ${PROD_VALIDATE_SIGS:true}
+
+# TODO Issue Management Configuration
+todo_issues:
+  todo_issue_prefix: "${TODO_PREFIX:📋}"
+  auto_assign_todos: ${AUTO_ASSIGN_TODOS:true}
+  category_labels:
+    security: "security"
+    performance: "performance"
+    testing: "testing"
+    documentation: "docs"
+  todo_priority_mapping:
+    security: "HIGH"
+    performance: "MEDIUM"
+    testing: "MEDIUM"
+    documentation: "LOW"

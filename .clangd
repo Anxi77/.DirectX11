@@ -1,5 +1,5 @@
 CompileFlags:
-  Add: [-Wno-unused-includes, -Wno-MissingIncludes]
+  Add: [-Wno-unused-includes, -Wno-MissingIncludes, -Wno-pragma-pack]
 
 Diagnostics:
   UnusedIncludes: None

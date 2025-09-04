@@ -53,3 +53,7 @@ bin/shaders/
 *.tmp
 *.temp
 ~$* 
+
+/.claude/
+/.serena/
+/CLAUDE.md

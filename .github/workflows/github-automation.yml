@@ -1,0 +1,278 @@
+name: GitHub Automation
+
+on:
+  # Workflow tracking - triggered by commits
+  push:
+    branches:
+      - "**"
+    paths-ignore:
+      - "**.md"
+      - ".gitignore"
+      - "LICENSE"
+      - "docs/**"
+      - "Docs/**"
+
+  # Task management - triggered by issue/project events
+  issues:
+    types: [edited, labeled, unlabeled, assigned, unassigned, closed, reopened]
+
+  project_card:
+    types: [created, moved, converted, deleted]
+
+  # Manual trigger
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Automation mode to run"
+        required: true
+        default: "workflow"
+        type: choice
+        options:
+          - workflow
+          - task-management
+          - report
+      dry_run:
+        description: "Dry run mode (no actual changes)"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  issues: write
+  contents: write
+  pull-requests: write
+  repository-projects: write
+  actions: read
+  checks: write
+  statuses: write
+  id-token: write
+
+env:
+  TIMEZONE: "Asia/Seoul"
+  PROJECT_NUMBER: "2"
+  AUTOMATION_ENV: "production"
+
+jobs:
+  # Workflow Tracking Job (commit-based DSR generation)
+  workflow-tracking:
+    if: |
+      github.event_name == 'push' &&
+      !contains(github.event.head_commit.message, '[skip-automation]') &&
+      github.actor != 'github-actions[bot]' &&
+      github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r .github/scripts/requirements.txt
+
+      - name: Run Workflow Tracking
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_SHA: ${{ github.sha }}
+          GITHUB_REF: ${{ github.ref }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+          # Note: PROJECT_NUMBER, TIMEZONE, AUTOMATION_ENV are available from global env
+        run: |
+          cd .github/scripts
+          python main.py --mode workflow
+
+  # Task Management Job (issue/project sync)
+  task-management:
+    if: |
+      (github.event_name == 'issues' && 
+       !contains(github.event.issue.labels.*.name, 'DSR') && 
+       !contains(github.event.issue.labels.*.name, 'todo-item') &&
+       github.actor != 'github-actions[bot]') ||
+      (github.event_name == 'project_card' && 
+       github.actor != 'github-actions[bot]') ||
+      (github.event_name == 'workflow_dispatch' &&
+       github.event.inputs.mode == 'task-management')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r .github/scripts/requirements.txt
+
+      - name: Determine automation mode
+        id: mode
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "mode=${{ github.event.inputs.mode }}" >> $GITHUB_OUTPUT
+            echo "dry_run=${{ github.event.inputs.dry_run }}" >> $GITHUB_OUTPUT
+          else
+            echo "mode=task-management" >> $GITHUB_OUTPUT
+            echo "dry_run=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Run Task Management
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+          # Note: PROJECT_NUMBER, TIMEZONE, AUTOMATION_ENV are available from global env
+        run: |
+          cd .github/scripts
+          ARGS="--mode ${{ steps.mode.outputs.mode }}"
+          if [ "${{ steps.mode.outputs.dry_run }}" = "true" ]; then
+            ARGS="$ARGS --dry-run"
+          fi
+          python main.py $ARGS
+
+  # Project Status Report Job (manual or scheduled)
+  project-report:
+    if: |
+      (github.event_name == 'workflow_dispatch' && 
+       github.event.inputs.mode == 'report') ||
+      github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r .github/scripts/requirements.txt
+
+      - name: Generate Project Report
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          # Note: PROJECT_NUMBER, TIMEZONE, AUTOMATION_ENV are available from global env
+        run: |
+          cd .github/scripts
+          python main.py --mode report --verbose
+
+  # Health Check Job (validate system health)
+  health-check:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r .github/scripts/requirements.txt
+
+      - name: Validate Configuration
+        run: |
+          cd .github/scripts
+          python -c "
+          import yaml
+          import sys
+          try:
+              with open('config.yaml') as f:
+                  config = yaml.safe_load(f)
+              print('Configuration validation: PASSED')
+              print(f'Loaded {len(config)} configuration sections')
+          except Exception as e:
+              print(f'Configuration validation: FAILED - {e}')
+              sys.exit(1)
+          "
+
+      - name: Test GitHub API Connection
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+        run: |
+          cd .github/scripts
+          python -c "
+          import os
+          from core.api_client import APIClient
+          try:
+              token = os.environ.get('PAT') or os.environ.get('GITHUB_TOKEN')
+              client = APIClient(token)
+              repo_full_name = os.environ['GITHUB_REPOSITORY']
+              owner, repo_name = repo_full_name.split('/')
+              repo = client.get_repository(owner, repo_name)
+              rate_limit = client.get_rate_limit()
+              print(f'GitHub API connection: PASSED')
+              print(f'Repository: {repo_full_name}')
+              print(f'Rate limit remaining: {rate_limit[\"remaining\"]}')
+          except Exception as e:
+              print(f'GitHub API connection: FAILED - {e}')
+              import sys
+              sys.exit(1)
+          "
+
+      - name: Test Core System
+        run: |
+          cd .github/scripts
+          python main.py --health-check
+
+  # DSR Synchronization - triggered when TODO issues are closed
+  dsr-sync:
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'issues' &&
+      (github.event.action == 'closed' || github.event.action == 'reopened') &&
+      contains(github.event.issue.labels.*.name, 'todo-item')
+
+    # Note: Global env variables are automatically available in all jobs
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r .github/scripts/requirements.txt
+
+      - name: Sync DSR Checkboxes
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT || secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_EVENT_NAME: ${{ github.event_name }}
+          # Note: PROJECT_NUMBER, TIMEZONE, AUTOMATION_ENV are available from global env
+        run: |
+          cd .github/scripts
+          echo "🔄 Syncing DSR checkboxes for issue #${{ github.event.issue.number }}"
+          python main.py --mode sync-dsr

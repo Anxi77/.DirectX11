@@ -1,0 +1,15 @@
+# Core GitHub automation dependencies
+PyYAML>=6.0
+requests>=2.31.0
+python-dateutil>=2.8.2
+pytz>=2021.1
+
+# GraphQL dependencies
+gql>=3.4.1
+requests-toolbelt>=0.10.1
+
+# Optional dependencies for enhanced features
+pandas>=2.0.0  # For data analysis and statistics
+slack-sdk>=3.21.3  # For Slack notifications
+
+# Note: PyGithub removed in favor of GraphQL API via gql
