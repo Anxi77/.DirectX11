@@ -17,15 +17,21 @@ A comprehensive graphics engine project for learning DirectX 11, 3D mathematics,
 ### ✅ Completed
 
 #### DirectX 11 pipeline setup and initialization
+
 #### Window management system with Win32 integration
+
 #### HLSL shader loading and compilation system
+
 #### Basic point rendering implementation
+
 #### CMake build system with automated shader compilation
 
 ### 🎯 Currently Working On
 
 #### Triangle rendering with vertex buffers
+
 #### Color system integration (vertex colors)
+
 #### Multiple primitive rendering
 
 ### 🚀 Quick Start
@@ -228,7 +234,8 @@ void RaytraceCS(uint3 id : SV_DispatchThreadID) {
 
 - **[DirectX 11 Fundamentals](./Docs/DirectX/01_DirectX11_Fundamentals.md)** - Core concepts, graphics pipeline, DirectX vs OpenGL comparison
 - **[Graphics Class Analysis](./Docs/DirectX/02_Graphics_Class_Analysis.md)** - Line-by-line code analysis of rendering pipeline
-- **[Tirangle Rendering Implementation](./Docs/DirectX/03_Triangle_Rendering.md)**
+- **[Triangle Rendering Implementation](./Docs/DirectX/03_Triangle_Rendering.md)** - Complete triangle pipeline, shader compilation, and rendering state configuration
+- **[Vertex Coloring Implementation](./Docs/DirectX/04_Vertex_Coloring_Implementation.md)** - Per-vertex colors, hardware interpolation, and gradient rendering techniques
 
 ### 💡 C++ & Programming Tips
 
@@ -344,7 +351,7 @@ Docs/              # Complete learning documentation
 
 <div align="center">
 
-**Current Focus**: Phase 1 Triangle Rendering → [Graphics Class Analysis](./Docs/DirectX/02_Graphics_Class_Analysis.md)
+**Current Focus**: Phase 4 Vertex Colorinng → [Vertex Coloring Implementation](./Docs/DirectX/04_Vertex_Coloring_Implementation.md)
 
 **Next Steps**: Complete triangle rendering, add vertex colors, prepare for 3D transformations
 
