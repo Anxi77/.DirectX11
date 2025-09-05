@@ -1,6 +1,6 @@
 <div align="center">
 
-![header](https://capsule-render.vercel.app/api?type=transparent&color=39FF14&height=150&section=header&text=DirectX%2011%20Engine&fontSize=70&animation=fadeIn&fontColor=39FF14&desc=Complete%20Learning%20Journey%20from%20Fundamentals%20to%20Ray%20Tracing&descSize=20&descAlignY=75)
+![header](https://capsule-render.vercel.app/api?type=transparent&color=39FF14&height=150&section=header&text=DirectX%2011%20Engine&fontSize=70&animation=fadeIn&fontColor=39FF14&desc=Learning%20Fundamentals&descSize=20&descAlignY=75)
 
 # DirectX 11 Graphics Engine Learning Project
 
