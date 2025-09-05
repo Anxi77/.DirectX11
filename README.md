@@ -16,17 +16,17 @@ A comprehensive graphics engine project for learning DirectX 11, 3D mathematics,
 
 ### ✅ Completed
 
-- DirectX 11 pipeline setup and initialization
-- Window management system with Win32 integration
-- HLSL shader loading and compilation system
-- Basic point rendering implementation
-- CMake build system with automated shader compilation
+#### DirectX 11 pipeline setup and initialization
+#### Window management system with Win32 integration
+#### HLSL shader loading and compilation system
+#### Basic point rendering implementation
+#### CMake build system with automated shader compilation
 
 ### 🎯 Currently Working On
 
-- Triangle rendering with vertex buffers
-- Color system integration (vertex colors)
-- Multiple primitive rendering
+#### Triangle rendering with vertex buffers
+#### Color system integration (vertex colors)
+#### Multiple primitive rendering
 
 ### 🚀 Quick Start
 
