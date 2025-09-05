@@ -24,19 +24,6 @@ set(SHADER_OUTPUT_DIR "${CMAKE_SOURCE_DIR}/bin/shaders")
 
 # Shader Compile Function
 function(compile_shader SHADER_FILE SHADER_TYPE)
-    # Check if DXC compiler exists
-    set(DXC_PATH "${CMAKE_SOURCE_DIR}/tools/dxc.exe")
-    message(STATUS "Looking for DXC at: ${DXC_PATH}")
-    
-    if(NOT EXISTS "${CMAKE_SOURCE_DIR}/tools/dxc.exe")
-        message(WARNING "DXC compiler not found at ${CMAKE_SOURCE_DIR}/tools/dxc.exe")
-        message(STATUS "Current source dir: ${CMAKE_SOURCE_DIR}")
-        message(STATUS "Current binary dir: ${CMAKE_BINARY_DIR}")
-        return()
-    endif()
-    
-    message(STATUS "DXC compiler found!")
-
     get_filename_component(SHADER_NAME ${SHADER_FILE} NAME_WE)
     set(SHADER_INPUT "${SHADER_SOURCE_DIR}/${SHADER_FILE}")
     set(SHADER_OUTPUT "${SHADER_OUTPUT_DIR}/${SHADER_NAME}.cso")
@@ -58,6 +45,7 @@ function(compile_shader SHADER_FILE SHADER_TYPE)
                 ${SHADER_INPUT} /Fo ${SHADER_OUTPUT}
         DEPENDS ${SHADER_INPUT}
         COMMENT "Compiling ${SHADER_TYPE} shader: ${SHADER_FILE}"
+        VERBATIM
     )
 
     # Add Shader Output to Global Property
@@ -133,7 +121,6 @@ if(MSVC)
         user32
     )
 
-    # 컴파일러 옵션 설정
     string(REPLACE "/W3" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
     add_compile_options(
         /utf-8

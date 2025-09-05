@@ -1,6 +1,11 @@
 #pragma once
 
-// Windows Headers
+/*
+WIN32_LEAN_AND_MEAN: Excludes rarely-used Windows APIs (GDI, Shell, COM, Networking, Multimedia)
+This significantly reduces compilation time and memory usage for DirectX projects
+DirectX provides its own graphics/audio APIs, so we don't need legacy Windows multimedia functions
+*/
+
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 

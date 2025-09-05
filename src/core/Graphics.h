@@ -1,34 +1,37 @@
 #pragma once
 #include "utils/stdafx.h"
+#include <wrl/client.h>
+
+using Microsoft::WRL::ComPtr;
 
 // DirectX Graphics Management Class
 // Initializes and manages the rendering pipeline and graphics resources
 class Graphics {
-   public:
+  public:
     Graphics();
     ~Graphics();
 
-    // DirectX Initialize Function
-    // hwnd: Window Handle to Render
-    // width, height: Size of the rendering area
+    /*
+    DirectX Initialize Function
+    hwnd: Window Handle to Render
+    width, height: Size of the rendering area
+    */
     bool Initialize(HWND hwnd, int width, int height);
 
     // Frame Rendering Function
     void Render();
 
-    // Graphics Resource Cleanup Function
-    void Cleanup();
+  private:
+    // DirectX 11 core components
+    ComPtr<ID3D11Device> device;
+    ComPtr<ID3D11DeviceContext> deviceContext;
+    ComPtr<IDXGISwapChain> swapChain;
+    ComPtr<ID3D11RenderTargetView> renderTargetView;
 
-   private:
-    ID3D11Device *device;                     // Graphics Device: Create and manage resources
-    ID3D11DeviceContext *deviceContext;       // Device Context: Execute rendering commands
-    IDXGISwapChain *swapChain;                // Swap Chain: Manage double buffering
-    ID3D11RenderTargetView *renderTargetView; // Render Target View: Rendering output destination
-
-    // Shader Related Member Variables
-    ID3D11VertexShader *vertexShader;
-    ID3D11PixelShader *pixelShader;
-    ID3D11InputLayout *inputLayout;
+    // Shader related
+    ComPtr<ID3D11VertexShader> vertexShader;
+    ComPtr<ID3D11PixelShader> pixelShader;
+    ComPtr<ID3D11InputLayout> inputLayout;
 
     bool LoadShaders(); // Load Shaders Function
 };

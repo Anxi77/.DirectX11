@@ -1,6 +1,19 @@
-#pragma pack_matrix(row_major)
-
-float4 main(float3 pos : POSITION) : SV_POSITION
+struct VertexInput
 {
-    return float4(pos, 1.0f);
+    float3 position : POSITION;
+    float4 color : COLOR;
+};
+
+struct VertexOutput
+{
+    float4 position : SV_POSITION;
+    float4 color : COLOR;
+};
+
+VertexOutput main(VertexInput input)
+{
+    VertexOutput output;
+    output.position = float4(input.position, 1.0f);
+    output.color = input.color;
+    return output;
 } 

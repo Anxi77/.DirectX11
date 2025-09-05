@@ -14,17 +14,22 @@ Window::~Window() {
 // wParam, lParam: Additional data passed with the message
 LRESULT CALLBACK Window::WindowProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     switch (msg) {
-        case WM_CLOSE: // When the close button is clicked
+    case WM_KEYDOWN: // When a key is pressed
+        if (wParam == VK_ESCAPE) { // If ESC key is pressed
             DestroyWindow(hwnd);
-            return 0;
-        case WM_DESTROY:        // When the window is destroyed
-            PostQuitMessage(0); // Post a WM_QUIT message to terminate the message loop
-            return 0;
+        }
+        return 0;
+    case WM_CLOSE: // When the close button is clicked
+        DestroyWindow(hwnd);
+        return 0;
+    case WM_DESTROY:        // When the window is destroyed
+        PostQuitMessage(0); // Post a WM_QUIT message to terminate the message loop
+        return 0;
     }
     return DefWindowProc(hwnd, msg, wParam, lParam); // Default message processing
 }
 
-bool Window::Initialize(const wchar_t *title, int width, int height) {
+bool Window::Initialize(const wchar_t* title, int width, int height) {
     // 1. Define the window class
     WNDCLASSEXW wc   = {};                       // Initialize the window class structure
     wc.cbSize        = sizeof(WNDCLASSEXW);      // Structure size

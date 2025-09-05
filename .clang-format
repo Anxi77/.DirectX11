@@ -1,5 +1,6 @@
 Language: Cpp
-BasedOnStyle: Google
+PointerAlignment: Left
+ReferenceAlignment: Left
 IndentWidth: 4
 TabWidth: 4
 UseTab: Never
@@ -13,3 +14,9 @@ AlignTrailingComments: true
 SpacesBeforeTrailingComments: 1
 SpaceAfterCStyleCast: false
 BreakBeforeBraces: Attach
+
+# Function call formatting - one parameter per line
+BinPackArguments: false
+BinPackParameters: false
+AllowAllArgumentsOnNextLine: false
+AllowAllParametersOfDeclarationOnNextLine: false
